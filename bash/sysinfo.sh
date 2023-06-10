@@ -1,13 +1,20 @@
 #!/bin/bash
+#
 # sysinfo.sh - a script to display information about a computer
 
-echo "FQDN: $(hostname --fqdn)"
+# Output template
+output_template="
+Report for $(hostname)
+===============
 
-echo "Host Information:"
-hostnamectl
+FQDN: $(hostname -f)
+Operating System name and version: $(lsb_release -ds | cut -d ' ' -f 1,2)
+IP Address: $(ip route get 8.8.8.8 | awk '{print $7}')
+Root Filesystem Free Space: $(df -h / | awk 'NR==2 {print $4}')
 
-echo "IP Addresses:"
-hostname -I | awk '{print $1}'
+===============
+"
 
-echo "Root Filesystem Status:"
-df -h /
+# Display the output
+echo "$output_template"
+
